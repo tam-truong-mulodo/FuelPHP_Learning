@@ -34,7 +34,6 @@ class myvalidationrules_Test extends TestCase
             array("改行を含む\r\n文字列です。"),
             array("タブを含む\t文字列です。"),
             array("改行と\rタブを含む\t文字列\nです。"),
-            array("Tam\r\n"),
         );
     }
 

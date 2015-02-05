@@ -7,13 +7,12 @@ class Controller_Form extends Controller_Template
     {
         $this->template->title = '問い合わせ';
         $this->template->content = View::forge('form/index');
-        //$this->template->set_global('footer', Html::anchor('http://www.mulodo.com.vn/', 'Mulodo VietNam Inc.'), false);
     }
 
     public function action_confirm()
     {
-        //$val = $this->forge_validate();
-        $val = $this->forge_validate()->add_callable('MyValidationRules');
+        $val = $this->forge_validate();
+       
         if ($val->run()) {
             $data['input'] = $val->validated();
             $this->template->title = 'お問い合わせ: 確認';
@@ -32,9 +31,8 @@ class Controller_Form extends Controller_Template
             throw new HttpInvalidInputException('ページ遷移が正しくありません');
         }
 
-        //$val = $this->forge_validate();
-        $val = $this->forge_validate()->add_callable('MyValidationRules');
-
+        $val = $this->forge_validate();
+    
         if (!$val->run()) {
             $this->template->title = 'お問い合わせ: エラー';
             $this->template->content = View::forge('form/index');
@@ -69,13 +67,14 @@ class Controller_Form extends Controller_Template
     public function forge_validate()
     {
         $val = Validation::forge();
+        $val->add_callable('MyValidationRules');
 
         $val->add('name', '名前')
                 ->add_rule('trim')
                 ->add_rule('required')
                 ->add_rule('no_tab_and_newline')
                 ->add_rule('max_length', 50);
-
+        
         $val->add('email', 'メールアドレス')
                 ->add_rule('trim')
                 ->add_rule('required')
