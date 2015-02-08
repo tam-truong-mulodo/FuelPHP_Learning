@@ -15,10 +15,10 @@ class Controller_Form extends Controller_Template
        
         if ($val->run()) {
             $data['input'] = $val->validated();
-            $this->template->title = 'お問い合わせ: 確認';
+            $this->template->title = '問い合わせ: 確認';
             $this->template->content = View::forge('form/confirm', $data);
         } else {
-            $this->template->title = 'お問い合わせ: エラー';
+            $this->template->title = '問い合わせ: エラー';
             $this->template->content = View::forge('form/index');
             $this->template->content->set_safe('html_error', $val->show_errors());
         }
@@ -34,7 +34,7 @@ class Controller_Form extends Controller_Template
         $val = $this->forge_validate();
     
         if (!$val->run()) {
-            $this->template->title = 'お問い合わせ: エラー';
+            $this->template->title = '問い合わせ: エラー';
             $this->template->content = View::forge('form/index');
             $this->template->content->set_safe('html_error', $val->show_errors());
 
@@ -46,7 +46,7 @@ class Controller_Form extends Controller_Template
         // メールの送信
         try {
             $this->sendmail($data);
-            $this->template->title = 'お問い合わせ: 送信完了';
+            $this->template->title = '問い合わせ: 送信完了';
             $this->template->content = View::forge('form/send');
 
             return;
@@ -58,7 +58,7 @@ class Controller_Form extends Controller_Template
             $html_error = '<p>メールを送信できませんでした。</p>';
         }
 
-        $this->template->title = 'お問い合わせ: 送信エラー';
+        $this->template->title = '問い合わせ: 送信エラー';
         $this->template->content = View::forge('form/index');
         $this->template->content->set_safe('html_error', $html_error);
     }
@@ -97,7 +97,7 @@ class Controller_Form extends Controller_Template
         $data['from_name'] = $post['name'];
         $data['to'] = 'truong.tam@mulodo.com';
         $data['to_name'] = 'test for contact form in fuelphp';
-        $data['subject'] = 'お問い合わせフォーム';
+        $data['subject'] = '問い合わせフォーム';
 
         $ip = Input::ip();   //userのIPアドレス
         $agent = Input::user_agent(); //userのブラウンらブラウザ情報
