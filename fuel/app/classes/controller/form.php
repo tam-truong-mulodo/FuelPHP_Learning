@@ -1,8 +1,8 @@
 <?php
 
-class Controller_Form extends Controller_Template
+class Controller_Form extends Controller_Clickjack
 {
-
+    
     public function action_index()
     {
         $this->template->title = '問い合わせ';
