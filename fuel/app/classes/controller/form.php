@@ -67,9 +67,8 @@ class Controller_Form extends Controller_Clickjack
             $html_error = '<p>メールを送信できませんでした。</p>';
         }
 
-        $this->template->title = '問い合わせ: 送信エラー';
         $form->repopulate();
-        $this->template->title = 'お問い合わせ: 送信エラー';
+        $this->template->title = '問い合わせ: 送信エラー';
         $this->template->content = View::forge('form/index');
         $this->template->content->set_safe('html_error', $html_error);
         $this->template->content->set_safe('html_form', $form->build('form/confirm'));        
