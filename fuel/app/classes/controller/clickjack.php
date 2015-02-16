@@ -14,7 +14,6 @@ class Controller_Clickjack extends Controller_Template
 
     public function before()
     {
-        echo 'tamtest';
         parent::before();
         $this->response = Response::forge();
         $this->response->set_header('X-FRAME-OPTIONS', 'SAMEORIGIN');

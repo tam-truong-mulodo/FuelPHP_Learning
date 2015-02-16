@@ -51,10 +51,30 @@ class Controller_Form extends Controller_Clickjack
         }
 
         $post = $val->validated();
-        $data = $this->build_mail($post);
+        
+        //Ip, user agentの情報をpost データに追加
+        $post['ip_address'] = Input::ip();
+        $post['user_agent'] = Input::user_agent();
+        unset($post['submit']); //postデータからsubmitを削除
+        //DBへ保存する
+        $model_form = Model_Form::forge()->set($post);
+        list($id, $rows) = $model_form->save();
+        
+        if($rows != 1){
+            Log::error('データベース保存エラー', __METHOD__);
+            $form->repopulate();
+            $this->template->title = '問い合わせ: サーバエラー';
+            $this->template->content = View::forge('form/index');
+            $html_error = '<p>サーバでエラーが発生しました。</p>';
+            $this->template->content->set_safe('html_error', $html_error);
+            $this->template->content->set_safe('html_form', $form->build('form/confirm'));
+            return;
+        }
+
         // メールの送信
         try {
-            $this->sendmail($data);
+            $mail = new Model_Mail();
+            $mail->send($post);
             $this->template->title = '問い合わせ: 送信完了';
             $this->template->content = View::forge('form/send');
 
@@ -97,58 +117,6 @@ class Controller_Form extends Controller_Clickjack
 
         $form->add('submit', '', array('type' => 'submit', 'value' => '確認'));
         return $form;
-    }
-
-    // メールの作成
-    public function build_mail($post)
-    {
-        //メール情報
-        $data['from'] = $post['email'];
-        $data['from_name'] = $post['name'];
-        $data['to'] = 'truong.tam@mulodo.com';
-        $data['to_name'] = 'test for contact form in fuelphp';
-        $data['subject'] = '問い合わせフォーム';
-
-        $ip = Input::ip();   //userのIPアドレス
-        $agent = Input::user_agent(); //userのブラウンらブラウザ情報
-        //メール内容
-        // $data['body'] = <<< END
-        // ------------------------------------------------------------
-        // 名前: {$post['name']}
-        // メールアドレス: {$post['email']}
-        // IPアドレス: $ip
-        // ブラウザ: $agent
-        // ------------------------------------------------------------
-        // コメント:
-        // {$post['comment']}
-        // ------------------------------------------------------------
-        // END;
-        $string = "------------------------------------------------------------
-					名前: {$post['name']}
-					メールアドレス: {$post['email']}
-					IPアドレス: $ip
-					ブラウザ: $agent
-					------------------------------------------------------------
-					コメント:
-					{$post['comment']}
-					------------------------------------------------------------";
-        $data['body'] = $string; //[todo]後で表示の見た目を直す
-
-        return $data;
-    }
-
-    // メールの送信
-    public function sendmail($data)
-    {
-        Package::load('email');
-
-        $email = Email::forge();
-        $email->from($data['from'], $data['from_name']);
-        $email->to($data['to'], $data['to_name']);
-        $email->subject($data['subject']);
-        $email->body($data['body']);
-
-        $email->send();
     }
 
 }

@@ -3,7 +3,7 @@
 /**
  * MyValidationRules class Tests
  *
- * @group App2
+ * @group App
  */
 class myvalidationrules_Test extends TestCase
 {
