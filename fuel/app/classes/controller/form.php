@@ -57,10 +57,10 @@ class Controller_Form extends Controller_Clickjack
         $post['user_agent'] = Input::user_agent();
         unset($post['submit']); //postデータからsubmitを削除
         //DBへ保存する
-        $model_form = Model_Form::forge()->set($post);
-        list($id, $rows) = $model_form->save();
+        $model_form = Model_Form::forge($post);
+        $ret = $model_form->save();
         
-        if($rows != 1){
+        if(!$ret){
             Log::error('データベース保存エラー', __METHOD__);
             $form->repopulate();
             $this->template->title = '問い合わせ: サーバエラー';

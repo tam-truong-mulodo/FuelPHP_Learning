@@ -6,11 +6,15 @@
  */
 
 return array(
-	'default' => array(
-		'connection'  => array(
-			'dsn'        => 'mysql:host=localhost;dbname=fuel_test',
-			'username'   => 'fuel_app',
-			'password'   => 'super_secret_password',
-		),
-	),
+    'default' => array(
+        'connection'  => array(
+            'hostname' => '127.0.0.1',  // TCP・IP経由でmysqlに接続する為、
+            //'hostname' => 'localhost',// 明示にIPアドレスを指定しなければなりません
+            'port'     => '3306',
+            'database' => 'fuel_test',
+            'username' => 'fuel_test',
+            'password' => 'tammulodo',
+        ),
+        'profiling' => true,
+    ),
 );
